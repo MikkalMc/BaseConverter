@@ -5,6 +5,16 @@
 #include <string.h>
 
 
+void printNewArray(char* inputArray[], int range) {
+    int i;
+    printf("\n");
+    for (i = 0; i < range; i += 1)
+    {
+        printf("%s ", inputArray[i]);
+    }
+    // free(inputArray);
+}
+
 char** copyArrayOfRange(char* inputArray[], int start, int end)
 {
     int i;
@@ -14,8 +24,10 @@ char** copyArrayOfRange(char* inputArray[], int start, int end)
         result[i-start] = (char *) malloc(sizeof(char) * strlen(inputArray[i]));
         sprintf(result[i-start], "%s", inputArray[i]);
     }
+
     return result;
 }
+
 
 char** binaryToDecimal (char* inputArray[], int interval) 
 {
@@ -29,10 +41,10 @@ char** binaryToDecimal (char* inputArray[], int interval)
         result[i] = (char*) malloc(sizeof(char) * (int) ((ceil(log10(tempNum)/(log10(2)))+1)));
         sprintf(result[i], "%d", (int)tempNum);
     }
-    free(inputArray);
 
     return result;
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +62,7 @@ int main(int argc, char *argv[])
     {
         char startingBase = argv[1][0];
         char endingBase = argv[2][0];
+        int printRange = argc - 3;
 
         printf("Starting base %c \n",  startingBase);
         printf("Ending base %c \n", endingBase);
@@ -57,12 +70,8 @@ int main(int argc, char *argv[])
 
         if(startingBase == 'd') {
             if(endingBase == 'd') {
-                copy = copyArrayOfRange(argv, 3, argc);
-                printf("\n");
-                for (i = 0; i < argc - 3; i += 1)
-                {
-                    printf("%s ", copy[i]);
-                }
+                result = copyArrayOfRange(argv, 3, argc);
+                printNewArray(result, printRange);
             }
             else if (endingBase == 'h') {
                 printf("dec to hex");
@@ -80,12 +89,8 @@ int main(int argc, char *argv[])
         else if(startingBase == 'h') {
             if (endingBase == 'h')
             {
-                copy = copyArrayOfRange(argv, 3, argc);
-                printf("\n");
-                for (i = 0; i < argc - 3; i += 1)
-                {
-                    printf("%s ", copy[i]);
-                }
+                result = copyArrayOfRange(argv, 3, argc);
+                printNewArray(result, printRange);
             }
             else if (endingBase == 'd')
             {
@@ -105,16 +110,14 @@ int main(int argc, char *argv[])
         else if(startingBase == 'b') {
             if (endingBase == 'b')
             {
-                copy = copyArrayOfRange(argv, 3, argc);
-                printf("\n");
-                for (i = 0; i < argc - 3; i += 1)
-                {
-                    printf("%s ", copy[i]);
-                }
+                result = copyArrayOfRange(argv, 3, argc);
+                printNewArray(result, printRange);
             }
             else if (endingBase == 'd')
             {
-                printf("return unmutated array");
+                result = binaryToDecimal(copyArrayOfRange(argv, 3, argc), printRange);
+                printNewArray(result, printRange);
+
             }
             else if (endingBase == 'h')
             {
