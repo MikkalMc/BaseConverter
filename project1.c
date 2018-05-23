@@ -12,7 +12,33 @@ void printNewArray(char* inputArray[], int range) {
     {
         printf("%s ", inputArray[i]);
     }
-    // free(inputArray);
+}
+
+int convertDecimalToHex(int x)
+{
+    int hexadecimal_number, remainder, count = 0;
+    for (count = 0; x > 0; count++)
+    {
+        remainder = x % 16;
+        hexadecimal_number = hexadecimal_number + remainder * pow(10, count);
+        x = x / 16;
+    }
+    return hexadecimal_number;
+}
+
+int convertDecimalToBinary(int n)
+{
+    int binaryNumber = 0;
+    int remainder, i = 1, step = 1;
+
+    while (n != 0)
+    {
+        remainder = n % 2;
+        n /= 2;
+        binaryNumber += remainder * i;
+        i *= 10;
+    }
+    return binaryNumber;
 }
 
 char** copyArrayOfRange(char* inputArray[], int start, int end)
@@ -28,13 +54,12 @@ char** copyArrayOfRange(char* inputArray[], int start, int end)
     return result;
 }
 
-
+//Something to decimal
 char** binaryToDecimal (char* inputArray[], int interval) 
 {
     int i;
     int tempNum;
     char ** result = (char**) malloc((interval)*sizeof(char*));
-    // printf("testing this shit");
     for (i = 0; i < interval; i+=1)
     {
         tempNum = (int) strtol(inputArray[i], NULL, 2);
@@ -45,6 +70,57 @@ char** binaryToDecimal (char* inputArray[], int interval)
     return result;
 }
 
+char **hexToDecimal(char *inputArray[], int interval)
+{
+    int i;
+    int tempNum;
+    char **result = (char **)malloc((interval) * sizeof(char *));
+    for (i = 0; i < interval; i += 1)
+    {
+        tempNum = (int)strtol(inputArray[i], NULL, 16);
+        result[i] = (char *)malloc(sizeof(char) * (int)((ceil(log10(tempNum) / (log10(2))) + 1)));
+        sprintf(result[i], "%d", (int)tempNum);
+    }
+
+    return result;
+}
+
+//Decimal to other
+char **decimalToBinary(char *inputArray[], int interval)
+{
+    int i;
+    int charToInt;
+    int tempNum;
+    char **result = (char **)malloc((interval) * sizeof(char *));
+
+    for (i = 0; i < interval; i += 1)
+    {
+        charToInt = atoi(inputArray[i]);
+        tempNum = convertDecimalToBinary(charToInt);
+        result[i] = (char *)malloc(sizeof(char) * (int)((ceil(log10(tempNum) / (log10(2))) + 1)));
+        sprintf(result[i], "%d", (int)tempNum);
+    }
+
+    return result;
+}
+
+char **decimalToHex(char *inputArray[], int interval)
+{
+    int i;
+    int charToInt;
+    int tempNum;
+    char **result = (char **)malloc((interval) * sizeof(char *));
+
+    for (i = 0; i < interval; i += 1)
+    {
+        charToInt = atoi(inputArray[i]);
+        tempNum = convertDecimalToHex(charToInt);
+        result[i] = (char *)malloc(sizeof(char) * (int)((ceil(log10(tempNum) / (log10(2))) + 1)));
+        sprintf(result[i], "%d", (int)tempNum);
+    }
+
+    return result;
+}
 
 int main(int argc, char *argv[])
 {
@@ -74,11 +150,13 @@ int main(int argc, char *argv[])
                 printNewArray(result, printRange);
             }
             else if (endingBase == 'h') {
-                printf("dec to hex");
+                result = decimalToHex(copyArrayOfRange(argv, 3, argc), printRange);
+                printNewArray(result, printRange);
             }
             else if (endingBase == 'b')
             {
-                printf("dec to bin");
+                result = decimalToBinary(copyArrayOfRange(argv, 3, argc), printRange);
+                printNewArray(result, printRange);
             }
             else {
                 printf("ERROR: Improper base input.\n");
@@ -94,11 +172,13 @@ int main(int argc, char *argv[])
             }
             else if (endingBase == 'd')
             {
-                printf("return unmutated array");
+                result = hexToDecimal(copyArrayOfRange(argv, 3, argc), printRange);
+                printNewArray(result, printRange);
             }
             else if (endingBase == 'b')
             {
-                printf("dec to bin");
+                result = decimalToBinary(hexToDecimal(copyArrayOfRange(argv, 3, argc), printRange), printRange);
+                printNewArray(result, printRange);
             }
             else
             {
@@ -121,7 +201,8 @@ int main(int argc, char *argv[])
             }
             else if (endingBase == 'h')
             {
-                printf("dec to hex");
+                result = decimalToHex(binaryToDecimal(copyArrayOfRange(argv, 3, argc), printRange), printRange);
+                printNewArray(result, printRange);
             }
             else
             {
@@ -134,14 +215,5 @@ int main(int argc, char *argv[])
             printf("ERROR: Improper base input.\n");
             return 1;
         }
-              
-        // result = binaryToDecimal(copyArrayOfRange(argv, 0, argc), argc);
-        // for (i = 0; i < argc; i += 1)
-        // {
-        //     printf("%s ", result[i]);
-        // }
-        // printf("\n");
-        // free(result);
-        // return 0;
     }
 }
